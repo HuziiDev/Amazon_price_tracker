@@ -7,13 +7,14 @@ import { scrapeAmazonProduct } from "@/lib/scraper";
 import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
 import { conenctToDb } from "@/lib/mongoose";
 
+
 export const maxDuration = 300; // This function can run for a maximum of 300 seconds
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function GET(request: Request) {
   try {
-  conenctToDb()
+    conenctToDb()
 
     const products = await Product.find({});
 
@@ -23,7 +24,13 @@ export async function GET(request: Request) {
     const updatedProducts = await Promise.all(
       products.map(async (currentProduct) => {
         // Scrape product
-        const scrapedProduct = await scrapeAmazonProduct(currentProduct.url);
+        // Wrap scraping with timeout
+            const scrapedProduct = await Promise.race([
+            scrapeAmazonProduct(currentProduct.url),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Timeout')), 8000) // 8 second max
+            )
+            ]) as any;
 
         if (!scrapedProduct) return;
 
