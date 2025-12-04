@@ -47,6 +47,18 @@ const SearchBar = () => {
             setIsLoading(false)
         }
     }
+<<<<<<< HEAD
+=======
+  return (
+        <form onSubmit={handleSubmit} className='relative mt-12 max-w-2xl'>
+                <input 
+                    className='w-full py-3 pl-5 pr-12 text-gray-700 bg-white border-2 border-gray-200 rounded-full focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 shadow-sm' 
+                    type="text" 
+                    placeholder='Enter the Amazon product Link' 
+                    value={SearchPrompt}
+                    onChange={(e) => setSearchPrompt(e.target.value)}
+                />
+>>>>>>> e69c5533c536ad5077c240178b6120d34e8409ed
 
     return (
         <form onSubmit={handleSubmit} className='relative mt-8 w-full max-w-3xl group'>
