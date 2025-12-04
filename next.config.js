@@ -2,10 +2,13 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: '2mb',
+      bodySizeLimit: '2mb', // optional, if you want to keep this limit
     },
-    serverComponentsExternalPackages: ['mongoose', 'cheerio', 'axios']
+    // Removed invalid key
   },
+  // New key for external packages
+  serverExternalPackages: ['mongoose', 'cheerio', 'axios'],
+
   images: {
     remotePatterns: [
       {
@@ -18,6 +21,9 @@ const nextConfig = {
       },
     ],
   },
+  turbopack: {
+    root: './', // ensures correct project root if multiple lockfiles exist
+  },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

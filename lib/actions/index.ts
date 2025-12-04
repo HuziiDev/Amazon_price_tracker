@@ -9,11 +9,20 @@ import { revalidatePath } from "next/cache";
 import { User } from "@/types";
 import { generateEmailBody, sendEmail } from "../nodemailer";
 import { Sen } from "next/font/google";
-export async function scrapeAndStoreProduct(productUrl: string){
+import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
+type ScrapeResponse = {
+  success: boolean;
+  id?: string;
+  message?: string;
+};
+export async function scrapeAndStoreProduct(productUrl: string): Promise<ScrapeResponse> {
+    
     //function to scrape and store product details from amazon link
     if(!productUrl){
-       return
+       throw new Error("cannot find product url")
     }
+ 
 
     try {
         conenctToDb()
@@ -48,10 +57,22 @@ export async function scrapeAndStoreProduct(productUrl: string){
     {new: true, upsert: true}
        )
 
-       revalidatePath(`/products/${newProduct?._id}`);
+   
+  return { success: true, id: String(newProduct._id) }; 
+       revalidatePath('/'); 
+         revalidatePath(`/products/${newProduct._id}`);
+        
+      
+             
     } catch (error:any) {
+    
         throw new Error(`Falied to scrape the product: ${error.message}`)
+        
     }
+
+
+     
+ 
 }
 
 

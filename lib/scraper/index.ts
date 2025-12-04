@@ -39,10 +39,15 @@ export async function scrapeAmazonProduct(url: string) {
 
  const currentPrice = extractPrice(
     $('.priceToPay span.a-price-whole'),
-    $('a.size.base.a-color-price'),
-    $('.a-button-selected .a-color-base')
- )
-const originalPrice = extractPrice( $('#priceblock_ourprice'), $('#priceblock_dealprice'), $('#priceblock_saleprice'), $('.a-price.a-text-price span.a-offscreen'), $('.a-size-base.a-color-price') )
+    $('.a-price.a-text-price.a-size-medium.apexPriceToPay span.a-offscreen'),
+    $('.a-section.a-spacing-none.aok-align-center .a-price .a-offscreen')
+)
+
+const originalPrice = extractPrice(
+    $('.a-price.a-text-price span.a-offscreen'), // List price with strikethrough
+    $('.basisPrice .a-offscreen'), // Alternative basis price
+    $('span.a-price[data-a-strike="true"] .a-offscreen') // Struck-through price
+)
  const outOfStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable';
 
 const images = $('#imgBlkFront').attr('data-a-dynamic-image')  ||

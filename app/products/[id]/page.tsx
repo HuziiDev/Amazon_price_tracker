@@ -1,3 +1,4 @@
+
 import Modal from '@/components/Modal'
 import PriceInfoCard from '@/components/PriceInfoCard'
 import ProductCard from '@/components/ProductCard'
@@ -7,24 +8,29 @@ import { Product } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import React from 'react'
+
+
 
 type Props = {
-    params: {
-        id: string
-    }
+    params: Promise<{ id: string }> // params is a Promise in Next.js 14
 }
 
-const ProductDetails = async({params: {id}}: Props) => {
-    const product : Product = await getProductById(id)
+const ProductDetails = async (props: Props) => {
+    // Await the params Promise first
+    const params = await props.params
+    const { id } = params
+    
+    const product = await getProductById(id)
+    
     if(!product){
         redirect('/')
+        return null;
     }
 
     const similarproducts = await getSimilarProduct(id)
     
     return (
-        <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16'>
+        <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 sm:py-12 lg:py-16' id="product-details">
             {/* Main Product Section */}
             <div className='flex flex-col lg:flex-row gap-8 lg:gap-12 mb-12'>
                 {/* Product Image */}
@@ -85,7 +91,7 @@ const ProductDetails = async({params: {id}}: Props) => {
                             <div className='flex gap-3 flex-wrap'>
                                 <div className='flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full shadow-sm'>
                                     <Image src="/star.png" alt='rating' width={16} height={16}/>
-                                    <p className='text-sm font-semibold text-orange-500'>{product.stars}</p>
+                                    <p className='text-sm font-semibold text-orange-500'>{product.stars || 'N/A'}</p>
                                 </div>
                                 <div className='flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full shadow-sm'>
                                     <Image src="/comment.png" alt='reviews' width={16} height={16}/>
@@ -130,7 +136,8 @@ const ProductDetails = async({params: {id}}: Props) => {
             </div>
             <div className='flex justify-center items-center my-20'>
                <Modal productId={id}/>
-               </div>
+            </div>
+            
             {/* Product Description Section */}
             <div className='bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-sm mb-8'>
                 <div className='flex flex-col gap-6'>
@@ -138,11 +145,10 @@ const ProductDetails = async({params: {id}}: Props) => {
                         Product Description
                     </h3>
                    
-                    
                     {/* Buy Now Button */}
                     <button className='mt-6 w-full sm:w-auto self-start flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-900 hover:from-gray-950 hover:to-black rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                        <Image src="/buy.png" alt='3d model' width={24} height={24} className='brightness-0 invert'/>
-                        <Link className='text-base sm:text-lg text-white font-semibold' href='/'>
+                        <Image src="/buy.png" alt='buy now' width={24} height={24} className='brightness-0 invert'/>
+                        <Link className='text-base sm:text-lg text-white font-semibold' href={product.url} target='_blank'>
                             Buy Now
                         </Link>
                     </button>

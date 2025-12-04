@@ -24,7 +24,7 @@ const Navbar = () => {
   ]
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <nav className={`fixed  top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
         ? 'bg-white shadow-2xl border-b border-gray-200' 
         : 'bg-white'
@@ -39,7 +39,7 @@ const Navbar = () => {
             
             </div> */}
             <span className='text-xl lg:text-2xl font-bold text-black'>
-              Price<span className='text-red-600'>Wise</span>
+              Price<span className='text-red-600'>Sync</span>
             </span>
           </Link>
 
