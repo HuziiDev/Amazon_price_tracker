@@ -44,7 +44,7 @@ const SearchBar = () => {
                 <input 
                     className='w-full py-3 pl-5 pr-12 text-gray-700 bg-white border-2 border-gray-200 rounded-full focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 shadow-sm' 
                     type="text" 
-                    placeholder='Enter the product Link' 
+                    placeholder='Enter the Amazon product Link' 
                     value={SearchPrompt}
                     onChange={(e) => setSearchPrompt(e.target.value)}
                 />
