@@ -5,6 +5,7 @@ import ProductCard from '@/components/ProductCard'
 import { getProductById, getSimilarProduct } from '@/lib/actions'
 import { formatNumber } from '@/lib/utils'
 import { Product } from '@/types'
+import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -20,14 +21,15 @@ const ProductDetails = async (props: Props) => {
     const params = await props.params
     const { id } = params
     
-    const product = await getProductById(id)
-    
+   
+    const { data: product } = await axios.get<Product>(`http://localhost:3001/api/product/${id}` )
     if(!product){
         redirect('/')
         return null;
     }
-
-    const similarproducts = await getSimilarProduct(id)
+   const { data: similarproducts } = await axios.get<Product[]>(`http://localhost:3001/api/product/${id}/similar` )
+   console.log(similarproducts)
+    // const similarproducts = await getSimilarProduct(id)
     
     return (
         <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 sm:py-12 lg:py-16' id="product-details">
@@ -164,7 +166,7 @@ const ProductDetails = async (props: Props) => {
                     </div>
 
                     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8'>
-                        {similarproducts.map(product => (
+                        {similarproducts.map(product  => (
                             <ProductCard key={product._id} product={product}/>
                         ))}
                     </div>

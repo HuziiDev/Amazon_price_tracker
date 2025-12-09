@@ -3,10 +3,12 @@ import ProductCard from '@/components/ProductCard'
 import { getAllProduct } from '@/lib/actions'
 import Image from 'next/image'
 import React from 'react'
+import axios from 'axios'
 
 const Home = async () => {
-  const allProducts = await getAllProduct()
-
+  
+  const { data: allProducts } = await axios.get('http://localhost:3001/api/product')
+  
   return (
     <main className="min-h-screen bg-white text-gray-900 selection:bg-red-100 relative overflow-hidden font-sans">
       
@@ -67,7 +69,7 @@ const Home = async () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10'>
-          {allProducts.map((product) => (
+          {allProducts.map((product:any) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
