@@ -1,5 +1,6 @@
 'use client'
 import { scrapeAndStoreProduct } from '@/lib/actions';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState } from 'react'
 import toast from 'react-hot-toast';
@@ -24,6 +25,7 @@ const SearchBar = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsLoading(true)
 
         const isValidLink = isValidAmazonProductURL(SearchPrompt)
         if (!isValidLink) {
@@ -32,14 +34,19 @@ const SearchBar = () => {
         }
 
         try {
-            setIsLoading(true);
-          const res = await scrapeAndStoreProduct(SearchPrompt);
+            const res = await axios.post('/api/product/scrape' ,
+             {    productUrl:SearchPrompt}
+            )
+            const data = res.data
+         console.log(data)
+            setIsLoading(false);
+        //   const res = await scrapeAndStoreProduct(SearchPrompt);
           
-         if (res.success ) {
+         if (data.success ) {
       toast.success("Product added!");
-      router.push(`/products/${res.id}`);
+      router.push(`/products/${data.id}`);
     } else {
-      toast.error(res.message || "Something went wrong");
+      toast.error(data.message || "Something went wrong");
     }
         } catch (error) {
             console.log('Error processing the link', error);

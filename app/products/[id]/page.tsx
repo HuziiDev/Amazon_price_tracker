@@ -2,7 +2,7 @@
 import Modal from '@/components/Modal'
 import PriceInfoCard from '@/components/PriceInfoCard'
 import ProductCard from '@/components/ProductCard'
-import { getProductById, getSimilarProduct } from '@/lib/actions'
+
 import { formatNumber } from '@/lib/utils'
 import { Product } from '@/types'
 import axios from 'axios'
@@ -22,12 +22,12 @@ const ProductDetails = async (props: Props) => {
     const { id } = params
     
    
-    const { data: product } = await axios.get<Product>(`http://localhost:3001/api/product/${id}` )
+    const { data: product } = await axios.get<Product>(`http://localhost:3000/api/product/${id}` )
     if(!product){
         redirect('/')
         return null;
     }
-   const { data: similarproducts } = await axios.get<Product[]>(`http://localhost:3001/api/product/${id}/similar` )
+   const { data: similarproducts } = await axios.get<Product[]>(`http://localhost:3000/api/product/${id}/similar` )
    console.log(similarproducts)
     // const similarproducts = await getSimilarProduct(id)
     
@@ -133,12 +133,13 @@ const ProductDetails = async (props: Props) => {
                             borderColor="#b6dbff"
                         />
                     </div>
+                      <div className='flex justify-center items-center my-20'>
+               <Modal productId={id}/>
+            </div>
                 </div>
                 
             </div>
-            <div className='flex justify-center items-center my-20'>
-               <Modal productId={id}/>
-            </div>
+          
             
             {/* Product Description Section */}
             <div className='bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-sm mb-8'>

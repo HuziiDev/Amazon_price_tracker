@@ -1,13 +1,13 @@
 import SearchBar from '@/components/SearchBar'
 import ProductCard from '@/components/ProductCard'
-import { getAllProduct } from '@/lib/actions'
+
 import Image from 'next/image'
 import React from 'react'
 import axios from 'axios'
 
 const Home = async () => {
   
-  const { data: allProducts } = await axios.get('http://localhost:3001/api/product')
+  const { data: allProducts } = await axios.get('http://localhost:3000/api/product')
   
   return (
     <main className="min-h-screen bg-white text-gray-900 selection:bg-red-100 relative overflow-hidden font-sans">
