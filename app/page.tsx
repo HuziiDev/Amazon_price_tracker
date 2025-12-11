@@ -45,7 +45,7 @@ const Home = async () => {
             <h1 className='text-6xl md:text-8xl font-extrabold tracking-tighter leading-[1.1]'>
               Unleash the power of <br />
               <span className='text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400'>
-                PriceWise
+                PriceSync
               </span>
             </h1>
 
