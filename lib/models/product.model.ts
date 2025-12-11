@@ -27,7 +27,7 @@ export interface IProduct  {
   createdAt: Date;
   updatedAt: Date;
 }
-const productSchema = new mongoose.Schema<IProduct>({
+const productSchema = new mongoose.Schema({
     url:{
         type: String,
         required: true,
