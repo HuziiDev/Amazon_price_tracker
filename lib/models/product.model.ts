@@ -1,7 +1,33 @@
 import { time } from 'console';
 import mongoose from 'mongoose';
+export interface IPriceHistory {
+  price: number;
+  date: Date;
+}
 
-const productSchema = new mongoose.Schema({
+export interface IProductUser {
+  email: string;
+}
+export interface IProduct  {
+  url: string;
+  title: string;
+  currency: string;
+  image: string;
+  currentPrice: number;
+  originalPrice: number;
+  priceHistory: IPriceHistory[];
+  lowestPrice?: number;
+  highestPrice?: number;
+  averagePrice?: number;
+  discountRate?: number;
+  category?: string;
+  reviewsCount?: number;
+  isOutOfStock: boolean;
+  users: IProductUser[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+const productSchema = new mongoose.Schema<IProduct>({
     url:{
         type: String,
         required: true,
@@ -70,7 +96,7 @@ const productSchema = new mongoose.Schema({
     },
     users:[
         {email:{type:String, required:true}}
-    ], default:[],
+    ],
     
 }, {timestamps:true});
 export const Product = mongoose.models.Product || mongoose.model('Product', productSchema);

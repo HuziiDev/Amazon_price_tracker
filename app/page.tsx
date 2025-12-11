@@ -1,13 +1,15 @@
+
 import SearchBar from '@/components/SearchBar'
 import ProductCard from '@/components/ProductCard'
 
 import Image from 'next/image'
 import React from 'react'
 import axios from 'axios'
+import AllProducts from '@/components/AllProducts'
 
 const Home = async () => {
-  
-  const { data: allProducts } = await axios.get('http://localhost:3000/api/product')
+
+  // const { data: allProducts } = await axios.get('/api/product')
   
   return (
     <main className="min-h-screen bg-white text-gray-900 selection:bg-red-100 relative overflow-hidden font-sans">
@@ -68,11 +70,7 @@ const Home = async () => {
            </h2>
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10'>
-          {allProducts.map((product:any) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+        <AllProducts/>
       </section>
 
       {/* Footer Section */}

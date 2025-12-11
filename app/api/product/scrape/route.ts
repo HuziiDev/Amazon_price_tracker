@@ -12,6 +12,7 @@ const BRIGHTDATA_ENDPOINT =process.env.BRIGHT_ENDPOINT
 
 
 export async function POST(req: NextRequest) {
+    conenctToDb()
   try {
     const { productUrl } = await req.json();  // ✅ Changed from url
 
