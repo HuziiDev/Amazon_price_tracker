@@ -1,5 +1,4 @@
 // lib/cron/priceUpdateCron.ts
-import cron from 'node-cron';
 import Product from '@/lib/models/product.model';
 import { conenctToDb } from '@/lib/mongoose';
 import { scrapeAmazonProduct } from '@/lib/scraper';
@@ -95,13 +94,18 @@ export async function updateAllProducts() {
         if (emailNotifType && updatedProduct.users.length > 0) {
           console.log(`📧 Sending ${emailNotifType} notification to ${updatedProduct.users.length} users`);
 
+          // Create proper productInfo object
           const productInfo = {
             title: updatedProduct.title,
             url: updatedProduct.url,
+            image: updatedProduct.image,
+            currentPrice: updatedProduct.currentPrice,
+            originalPrice: updatedProduct.originalPrice,
+            currency: updatedProduct.currency,
           };
 
           try {
-            const emailContent = await generateEmailBody(productInfo, emailNotifType);
+            const emailContent = generateEmailBody(productInfo, emailNotifType);
             const userEmails = updatedProduct.users.map((user: any) => user.email);
             await sendEmail(emailContent, userEmails);
             
@@ -134,39 +138,33 @@ export async function updateAllProducts() {
   }
 }
 
-// Initialize cron job
+// For Development: Use setInterval instead of node-cron
+let cronInterval: NodeJS.Timeout | null = null;
+
 export function startPriceUpdateCron() {
-  // Run every 24 hours at 2:00 AM
-  // Cron format: second minute hour day month weekday
-  // '0 0 2 * * *' = Every day at 2:00 AM
+  // Run every hour for development (or adjust as needed)
+  const intervalMs = 60 * 60 * 1000; // 1 hour in milliseconds
   
-  const cronSchedule = '15 19 * * *'; 
-  // Other schedule options:
-  // '0 */6 * * *' - Every 6 hours
-  // '0 0 */12 * * *' - Every 12 hours
-  // '0 0 0 * * 0' - Every Sunday at midnight
-  // '0 30 1 * * *' - Every day at 1:30 AM
-
-  console.log('⏰ Initializing price update cron job...');
-  console.log(`📅 Schedule: Daily at 2:00 AM`);
-
-  const task = cron.schedule(cronSchedule, async () => {
-    await updateAllProducts();
-  }, {
-    scheduled: true,
-    timezone: "America/New_York" // Change to your timezone
-  });
-
-  console.log('✅ Cron job started successfully!');
-
-  return task;
+  console.log('⏰ Starting price update interval...');
+  console.log(`📅 Schedule: Every ${intervalMs / 1000 / 60} minutes`);
+  
+  // Run immediately once
+  updateAllProducts();
+  
+  // Then run at the specified interval
+  cronInterval = setInterval(() => {
+    console.log('🔄 Interval triggered at:', new Date().toISOString());
+    updateAllProducts();
+  }, intervalMs);
+  
+  return cronInterval;
 }
 
-// Stop cron job
-export function stopPriceUpdateCron(task: cron.ScheduledTask) {
-  if (task) {
-    task.stop();
-    console.log('🛑 Cron job stopped');
+export function stopPriceUpdateCron() {
+  if (cronInterval) {
+    clearInterval(cronInterval);
+    cronInterval = null;
+    console.log('🛑 Cron interval stopped');
   }
 }
 
@@ -175,3 +173,6 @@ export async function triggerManualUpdate() {
   console.log('🔧 Manual update triggered');
   await updateAllProducts();
 }
+
+// For Production: Create a Vercel cron endpoint instead
+// Add this to your app/api/cron/price-update/route.ts
