@@ -6,6 +6,7 @@ import Image from 'next/image'
 import React from 'react'
 import axios from 'axios'
 import AllProducts from '@/components/AllProducts'
+import DemoPage from '@/components/DemoPage'
 
 const Home = async () => {
 
@@ -42,7 +43,7 @@ const Home = async () => {
             </div>
 
             {/* Main Headline */}
-            <h1 className='text-6xl md:text-8xl font-extrabold tracking-tighter leading-[1.1]'>
+            <h1 className='text-6xl md:text-8xl text-slate-200 font-extrabold tracking-tighter leading-[1.1]'>
               Unleash the power of <br />
               <span className='text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400'>
                 PriceSync
@@ -50,7 +51,7 @@ const Home = async () => {
             </h1>
 
             {/* Subtext */}
-            <p className='mt-2 max-w-xl text-lg text-gray-500 leading-relaxed'>
+            <p className='mt-2 max-w-xl text-lg text-slate-400 leading-relaxed'>
               Find the best deals, compare prices, and save money with ease using PriceWise - your ultimate, futuristic shopping companion.
             </p>
 
@@ -60,9 +61,11 @@ const Home = async () => {
             </div>
         </div>
       </section>
+     
+        <DemoPage/>
 
       {/* Trending Section */}
-      <section className='relative z-10 px-6 md:px-20 py-24 bg-white/50 backdrop-blur-sm border-t border-red-50'>
+      <section className='relative z-10 px-6 md:px-20 py-24 bg-gray-400 backdrop-blur-sm border-t border-red-50'>
         <div className="flex items-center justify-between mb-12">
            <h2 className='text-4xl font-bold tracking-tight text-gray-900'>
              Trending Now
@@ -72,6 +75,9 @@ const Home = async () => {
 
         <AllProducts/>
       </section>
+
+
+        
 
       {/* Footer Section */}
       <footer className="relative z-10 bg-gray-50 border-t border-gray-200 pt-16 pb-8 px-6 md:px-20">

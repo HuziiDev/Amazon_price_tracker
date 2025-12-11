@@ -62,7 +62,7 @@ const SearchBar = () => {
             <div className="absolute -inset-1 bg-gradient-to-r from-red-200 to-red-100 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
             
             <input
-                className='relative w-full py-5 pl-8 pr-32 text-gray-700 bg-white border border-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xl shadow-red-500/5 placeholder:text-gray-400 text-lg transition-all duration-300'
+                className='relative w-full py-5 pl-8 pr-32 text-gray-700 bg-slate-300 border border-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xl shadow-red-500/5 placeholder:text-black/80 placeholder:font-semibold text-lg transition-all duration-300'
                 type="text"
                 placeholder='Paste Amazon Product Link...'
                 value={SearchPrompt}

@@ -32,7 +32,7 @@ const ProductDetails = async (props: Props) => {
     // const similarproducts = await getSimilarProduct(id)
     
     return (
-        <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 sm:py-12 lg:py-16' id="product-details">
+        <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 sm:py-12 lg:py-16 bg-white' id="product-details">
             {/* Main Product Section */}
             <div className='flex flex-col lg:flex-row gap-8 lg:gap-12 mb-12'>
                 {/* Product Image */}
