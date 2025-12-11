@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
+    
     serverActions: {
-      bodySizeLimit: '2mb', // optional, if you want to keep this limit
+      bodySizeLimit: '2mb', 
+      // optional, if you want to keep this limit
     },
+      instrumentationHook: true,
     // Removed invalid key
   },
   // New key for external packages

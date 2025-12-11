@@ -4,6 +4,7 @@ import { Description, Dialog, DialogPanel, DialogTitle, Transition } from '@head
 import Image from 'next/image'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { CircleXIcon, Cross, CrossIcon } from 'lucide-react'
 
 interface Props {
   productId: string
@@ -94,14 +95,7 @@ const Modal = ({productId}: Props) => {
                       <div className='p-3 border border-gray-200 rounded-lg'>
                         <Image src='/share.png' alt='share' width={20} height={20}/>
                       </div>
-                      <Image 
-                        src='/close-icon.png' 
-                        alt='close' 
-                        height={24}
-                        width={24}
-                        onClick={closeModal} 
-                        className='cursor-pointer'
-                      />
+                      <CircleXIcon className='text-red-500 w-8 h-8'/>
                     </div>
                     
                     <h4 className='text-secondary text-lg leading-[24px] font-semibold mt-4'>
