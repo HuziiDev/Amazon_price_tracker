@@ -21,7 +21,16 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
+ if (!BRIGHTDATA_API_KEY || !BRIGHTDATA_ENDPOINT) {
+      console.error('Missing environment variables:', {
+        hasApiKey: !!BRIGHTDATA_API_KEY,
+        hasEndpoint: !!BRIGHTDATA_ENDPOINT
+      });
+      return NextResponse.json(
+        { success: false, message: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
     console.log('Making request to Bright Data with:', {
       zone: 'pricewise',
       url: productUrl,  // ✅ Changed
