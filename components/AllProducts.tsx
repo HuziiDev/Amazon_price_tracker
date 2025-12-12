@@ -33,7 +33,7 @@ const AllProducts = () => {
 
   if (allProducts.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-10">
+       <div className="text-center text-gray-500 py-10">
         No products available yet. Start tracking some products!
       </div>
     )

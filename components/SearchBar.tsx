@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import Loader from './Loader';
 
 const isValidAmazonProductURL = (url: string) => {
+    
     try {
         const paresedURL = new URL(url);
         const hostname = paresedURL.hostname
