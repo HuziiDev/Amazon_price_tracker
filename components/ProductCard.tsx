@@ -54,7 +54,7 @@ const ProductCard = ({ product }: Props) => {
                             {product?.currency}
                         </span>
                         <span className="text-secondary font-bold text-base">
-                            {product.currentPrice.toFixed(2)}
+                            {product?.currentPrice}
                         </span>
                     </div>
 

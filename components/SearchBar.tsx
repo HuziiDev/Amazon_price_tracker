@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState } from 'react'
 import toast from 'react-hot-toast';
+import Loader from './Loader';
 
 const isValidAmazonProductURL = (url: string) => {
     try {
@@ -75,7 +76,7 @@ const SearchBar = () => {
                 disabled={SearchPrompt === ''}
             >
                 {isLoading ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <Loader/>
                 ) : (
                     <span className="flex items-center gap-2">
                         Track

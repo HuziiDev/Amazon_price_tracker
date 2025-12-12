@@ -1,14 +1,27 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { User, Sparkles } from 'lucide-react'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+  const [particles, setParticles] = useState<Array<{ left: string; top: string }>>([])
+  
+  const { scrollY } = useScroll()
+  const navbarBlur = useTransform(scrollY, [0, 100], [0, 20])
+  const navbarOpacity = useTransform(scrollY, [0, 100], [0.8, 0.95])
 
   useEffect(() => {
+    setIsMounted(true)
+    // Generate particles on client side only
+    const newParticles = [...Array(8)].map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+    }))
+    setParticles(newParticles)
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
@@ -16,122 +29,250 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Products', href: '/products' },
-    { name: 'Deals', href: '/deals' },
-    { name: 'About', href: '/about' },
-  ]
-
   return (
-    <nav className={`fixed  top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white shadow-2xl border-b border-gray-200' 
-        : 'bg-transparent'
-    }`}>
-      <div className='max-w-7xl mx-auto px-8 md:px-16 lg:px-0 '>
-        <div className='flex items-center justify-between h-16 lg:h-20'>
-          
-          {/* Logo */}
-          <Link href='/' className='flex items-center gap-3 group'>
-          {/* iamge can be addded inside this div */}
-            {/* <div className='relative w-10 h-10 lg:w-12 lg:h-12 bg-black rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-md group-hover:shadow-xl'>
-            
-            </div> */}
-            <span className='text-xl lg:text-2xl font-bold text-black'>
-              Price<span className='text-red-600'>Sync</span>
-            </span>
-          </Link>
+    <motion.nav 
+      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 sm:py-6"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <motion.div 
+        className="max-w-7xl mx-auto relative"
+        style={{
+          backdropFilter: `blur(${navbarBlur}px)`,
+        }}
+      >
+        {/* Glassmorphic container */}
+        <motion.div 
+          className={`
+            relative overflow-hidden
+            rounded-full sm:rounded-3xl
+            transition-all duration-500
+            ${isScrolled 
+              ? 'bg-black/40 shadow-2xl shadow-red-500/20' 
+              : 'bg-black/20 shadow-xl shadow-red-500/10'
+            }
+          `}
+          style={{
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          {/* Animated gradient border */}
+          <motion.div
+            className="absolute inset-0 rounded-full sm:rounded-3xl opacity-50"
+            animate={{
+              background: [
+                'linear-gradient(90deg, rgba(220,38,38,0.3) 0%, rgba(239,68,68,0.3) 50%, rgba(220,38,38,0.3) 100%)',
+                'linear-gradient(180deg, rgba(220,38,38,0.3) 0%, rgba(239,68,68,0.3) 50%, rgba(220,38,38,0.3) 100%)',
+                'linear-gradient(270deg, rgba(220,38,38,0.3) 0%, rgba(239,68,68,0.3) 50%, rgba(220,38,38,0.3) 100%)',
+                'linear-gradient(360deg, rgba(220,38,38,0.3) 0%, rgba(239,68,68,0.3) 50%, rgba(220,38,38,0.3) 100%)',
+              ]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            style={{
+              filter: 'blur(20px)',
+            }}
+          />
 
-          {/* Desktop Navigation */}
-          {/* <div className='hidden md:flex items-center gap-1 lg:gap-2'>
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className='px-4 py-2 text-black font-semibold hover:bg-red-50 hover:text-red-600 rounded-lg transition-all duration-200 relative'
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div> */}
-
-          {/* Right Section - Search & Actions */}
-          <div className='flex items-center gap-2 lg:gap-3'>
-            
-            {/* Search Bar - Hidden on small screens */}
-            <div className='hidden lg:flex items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 w-56 xl:w-64 focus-within:border-red-600 transition-all'>
-              <Image src='/search.png' alt='search' width={18} height={18} className='opacity-60' />
-              <input
-                type='text'
-                placeholder='Search products...'
-                className='bg-transparent border-none outline-none ml-2 text-sm w-full text-black placeholder:text-gray-500'
-              />
-            </div>
-
-         
-
-          
-
-            {/* User Profile */}
-            <button className='hidden sm:flex items-center gap-2 px-4 lg:px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300'>
-              <Image src='/user.png' alt='user' width={18} height={18} className='brightness-0 invert' />
-              <span className='text-sm hidden lg:inline'>Account</span>
-            </button>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className='md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors'
-            >
-              <div className='w-6 h-5 flex flex-col justify-between'>
-                <span className={`w-full h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-                <span className={`w-full h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-                <span className={`w-full h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
-          <div className='py-4 space-y-2 border-t border-gray-200'>
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className='block px-4 py-3 text-black font-semibold hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors'
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            {/* Mobile Search */}
-            <div className='px-4 pt-2'>
-              <div className='flex items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus-within:border-red-600 transition-all'>
-                <Image src='/search.png' alt='search' width={18} height={18} className='opacity-60' />
-                <input
-                  type='text'
-                  placeholder='Search products...'
-                  className='bg-transparent border-none outline-none ml-2 text-sm w-full text-black placeholder:text-gray-500'
+          {/* Floating particles effect */}
+          {isMounted && (
+            <div className="absolute inset-0 overflow-hidden rounded-full sm:rounded-3xl pointer-events-none">
+              {particles.map((particle, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-red-500 rounded-full"
+                  style={{
+                    left: particle.left,
+                    top: particle.top,
+                  }}
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0.2, 1, 0.2],
+                    scale: [0.5, 1.5, 0.5],
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 2,
+                    repeat: Infinity,
+                    delay: Math.random() * 2,
+                  }}
                 />
-              </div>
+              ))}
             </div>
+          )}
 
-            {/* Mobile Account Button */}
-            <div className='px-4 pt-2 sm:hidden'>
-              <button className='w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow-md transition-all'>
-                <Image src='/user.png' alt='user' width={18} height={18} className='brightness-0 invert' />
-                <span className='text-sm'>My Account</span>
-              </button>
+          {/* Content container */}
+          <div className="relative backdrop-blur-xl px-4 sm:px-8 py-3 sm:py-4">
+            <div className="flex items-center justify-between">
+              
+              {/* Logo Section */}
+              <motion.div
+                className="flex items-center gap-2 sm:gap-3 group cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Animated Icon Container */}
+                <div className="relative">
+                  <motion.div 
+                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-600 via-red-700 to-red-900 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/50"
+                    animate={{
+                      boxShadow: [
+                        '0 10px 30px rgba(220, 38, 38, 0.3)',
+                        '0 10px 40px rgba(220, 38, 38, 0.5)',
+                        '0 10px 30px rgba(220, 38, 38, 0.3)',
+                      ]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <motion.div
+                      animate={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                    >
+                      <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    </motion.div>
+                  </motion.div>
+                  
+                  {/* Pulsing ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-xl sm:rounded-2xl border-2 border-red-500"
+                    animate={{
+                      scale: [1, 1.3, 1],
+                      opacity: [0.5, 0, 0.5],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeOut"
+                    }}
+                  />
+                </div>
+
+                {/* Logo Text */}
+                <div className="flex flex-col">
+                  <motion.div 
+                    className="flex items-center"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent tracking-tight">
+                      Price
+                    </span>
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-red-500 via-red-400 to-red-600 bg-clip-text text-transparent tracking-tight">
+                      Sync
+                    </span>
+                  </motion.div>
+                  <motion.div 
+                    className="h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent"
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Account Button */}
+              <motion.button
+                className="relative group overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Button background with gradient */}
+                <div className="relative px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 rounded-full sm:rounded-2xl shadow-lg shadow-red-500/30 transition-all duration-300">
+                  
+                  {/* Animated shine effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    animate={{
+                      x: ['-100%', '200%'],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "easeInOut"
+                    }}
+                  />
+
+                  {/* Button content */}
+                  <div className="relative flex items-center gap-2">
+                    <motion.div
+                      animate={{ 
+                        rotate: [0, 360],
+                      }}
+                      transition={{ 
+                        duration: 20, 
+                        repeat: Infinity,
+                        ease: "linear" 
+                      }}
+                    >
+                      <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" strokeWidth={2.5} />
+                    </motion.div>
+                    <span className="hidden sm:inline text-sm lg:text-base font-bold text-white tracking-wide">
+                      Account
+                    </span>
+                    
+                    {/* Notification dot */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full"
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [1, 0.5, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Hover glow effect */}
+                <motion.div
+                  className="absolute inset-0 rounded-full sm:rounded-2xl bg-red-500 blur-xl -z-10"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 0.4 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+
             </div>
           </div>
-        </div>
-      </div>
-    </nav>
+
+          {/* Bottom shine line */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500 to-transparent"
+            animate={{
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+            }}
+          />
+        </motion.div>
+
+        {/* Outer glow effect */}
+        <motion.div
+          className="absolute -inset-2 rounded-full sm:rounded-3xl bg-gradient-to-r from-red-600/20 via-red-500/20 to-red-600/20 blur-2xl -z-10"
+          animate={{
+            opacity: isScrolled ? [0.3, 0.5, 0.3] : [0.2, 0.3, 0.2],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+    </motion.nav>
   )
 }
 
